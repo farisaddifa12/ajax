@@ -1,0 +1,47 @@
+<script>
+    $(document).ready(() => {
+      const $showData = $('#form2');
+
+      // fungsi untuk memunculkan data
+      function reloaddata() {
+        $.getJSON('http://localhost/ajax/submit-json.php', (respon) => {
+            const markup = respon
+            .map(item => `<tr><td>
+             ${item.id}.</td><td>${item.Nama}</td>
+             </td><td>${item.Email}</td></tr>`)
+             .join('');
+
+        $showData.html(markup);
+
+          $("submit").click(function () {
+
+            const x = $(this).attr("id");
+            $.post("submit.php", { x }, function (a) {
+
+            }).done(function () {
+              reloaddata();
+            });
+
+          });
+        });
+      }
+      //menampilkan data
+      reloaddata();
+
+
+      // fungsi untuk submit form & menampilkan data
+      $("form2").submit(function (event) {
+        event.preventDefault();
+
+        $.post('submit.php', $('#form2').serialize(), function (a) {
+          console.log(a);
+          reloaddata();
+        });
+      });
+
+      $("#submit").click(function () {
+        $("#form2").toggle();
+      });
+
+    });
+  </script>
